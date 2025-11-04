@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server';
-import { ThirdwebSDK } from '@thirdweb-dev/sdk';
 
-const sdk = ThirdwebSDK.fromPrivateKey(
-  process.env.THIRDWEB_SECRET_KEY!,
-  'base',
-  {
-    clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID,
-  }
-);
+// ✅ Force dynamic rendering - don't run at build time!
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
@@ -17,14 +11,27 @@ export async function POST(request: Request) {
       fid: number;
     };
 
+    // ✅ Use ThirdWeb SDK with CLIENT ID (not private key!)
+    const { ThirdwebSDK } = await import('@thirdweb-dev/sdk');
+    
+    if (!process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID) {
+      throw new Error('NEXT_PUBLIC_THIRDWEB_CLIENT_ID not configured');
+    }
+
+    // ✅ Use readOnly SDK - minting will be done via your smart contract
+    const sdk = new ThirdwebSDK('base', {
+      clientId: process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID,
+    });
+
     console.log(`🌟 Minting NFT for ${username} (FID: ${fid})`);
 
     const contract = await sdk.getContract(
       process.env.NEXT_PUBLIC_NFT_CONTRACT!
     );
 
+    // ✅ Mint using your contract's public mint function
     const tx = await contract.erc721.mintTo(
-      process.env.NEXT_PUBLIC_NFT_CONTRACT!,
+      process.env.NEXT_PUBLIC_WALLET_ADDRESS || '0xB5736dfae27B972Fc5d4cB40d4827AfAdA2cc2D9',
       {
         name: `Pixel Art #${fid}`,
         description: `Unique pixel art NFT generated for @${username}`,
