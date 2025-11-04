@@ -1,38 +1,47 @@
-import { NextRequest, NextResponse } from 'next/server';
-import Replicate from 'replicate';
+import { NextResponse } from 'next/server';
 
-const replicate = new Replicate({
-  auth: process.env.REPLICATE_API_TOKEN,
-});
-
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { profileImageUrl, username, fid } = body;
+    const { profileImageUrl, username, fid } = await request.json() as {
+      profileImageUrl: string;
+      username: string;
+      fid: number;
+    };
 
-    if (!profileImageUrl || !username) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+    const response = await fetch('https://api.replicate.com/v1/predictions', {
+      method: 'POST',
+      headers: {
+        Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        version: 'e6d66d95924f00f9d9f3db58fc66ecc97d3ba6c66e0b5b0b5b0b5b0b5b0b5b0',
+        input: {
+          image: profileImageUrl,
+          scale: 4,
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Replicate API error: ${response.statusText}`);
     }
 
-    const output = await replicate.run('openai/whisper', {
-      input: {
-        image: profileImageUrl,
-        prompt: `Convert for user ${username}`,
-      },
-    });
+    const data = (await response.json()) as { output?: string[] };
+
+    if (!data.output || !data.output[0]) {
+      throw new Error('No output from Replicate');
+    }
 
     return NextResponse.json({
       success: true,
-      data: { pixelArt: output, username, fid },
+      imageUrl: data.output[0],
     });
-  } catch (error: Error | unknown) {  // ✅ FIX HERE
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('API error:', errorMessage);
+  } catch (error: Error | unknown) {
+    const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Generation error:', errorMsg);
     return NextResponse.json(
-      { error: errorMessage },
+      { success: false, error: errorMsg },
       { status: 500 }
     );
   }
