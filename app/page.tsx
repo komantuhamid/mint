@@ -17,12 +17,11 @@ export default function HomePage() {
   const [isMinting, setIsMinting] = useState<boolean>(false);
   const [txHash, setTxHash] = useState<string>('');
 
-  // Get Farcaster user data
   useEffect(() => {
     const getUserData = async () => {
       try {
         const response = await fetch('/api/user');
-        const data = await response.json() as User;
+        const data = (await response.json()) as User;
         setUser(data);
       } catch (error: Error | unknown) {
         const errorMsg = error instanceof Error ? error.message : 'Unknown error';
@@ -91,10 +90,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 to-black">
-      {/* Header */}
       <h1 className="text-4xl font-bold text-center py-8 text-white">🎨 Pixel Art NFT Mint</h1>
 
-      {/* User Profile */}
       {user && (
         <div className="text-center mb-8 text-white">
           <p className="text-xl font-semibold">{user.username}</p>
@@ -102,11 +99,8 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Canvas */}
-      {/* ✅ FIXED: Changed 'image' to 'imageUrl' */}
       <PixelArtCanvas imageUrl={generatedImage} loading={isGenerating} />
 
-      {/* Buttons */}
       <div className="flex justify-center gap-4 my-8">
         <button
           onClick={handleGenerate}
@@ -117,11 +111,14 @@ export default function HomePage() {
         </button>
 
         {generatedImage && (
-          <MintButton onClick={handleMint} loading={isMinting} />
+          <MintButton
+            onClick={handleMint}
+            loading={isMinting}
+            disabled={!generatedImage || isMinting}
+          />
         )}
       </div>
 
-      {/* Transaction Result */}
       {txHash && (
         <div className="text-center text-green-400 mt-8">
           ✅ Minted! Transaction:{' '}
