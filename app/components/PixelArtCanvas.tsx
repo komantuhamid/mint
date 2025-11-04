@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useRef } from 'react';
@@ -26,8 +25,6 @@ export default function PixelArtCanvas({
     img.onload = () => {
       canvas.width = 512;
       canvas.height = 512;
-
-      // Disable image smoothing for pixel art effect
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     };
@@ -40,7 +37,6 @@ export default function PixelArtCanvas({
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-500 border-t-transparent"></div>
         </div>
       )}
-
       <canvas
         ref={canvasRef}
         className="border-4 border-purple-500 rounded-lg shadow-2xl shadow-purple-500/50"
