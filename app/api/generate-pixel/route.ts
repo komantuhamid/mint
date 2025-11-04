@@ -1,41 +1,47 @@
-
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import Replicate from 'replicate';
 
-export async function POST(request: Request) {
-  const replicate = new Replicate({
-    auth: process.env.REPLICATE_API_TOKEN,
-  });
+const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN,
+});
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const { profileImageUrl, username, fid } = await request.json();
+    const body = await request.json();
+    const { profileImageUrl, username, fid } = body;
 
-    console.log(`🎨 Generating pixel art for ${username} (FID: ${fid})`);
+    // Validate input
+    if (!profileImageUrl || !username) {
+      return NextResponse.json(
+        { error: 'Missing required fields: profileImageUrl, username' },
+        { status: 400 }
+      );
+    }
 
-    // Generate pixel art using Replicate
-    const output = await replicate.run(
-      'stability-ai/stable-diffusion',
-      {
-        input: {
-          prompt: `pixelated 16-bit retro pixel art style, vibrant colors, collectible NFT character, ${username}, farcaster user ${fid}, blocky pixels, retro gaming aesthetic, no text`,
-          num_outputs: 1,
-          num_inference_steps: 50,
-          guidance_scale: 7.5,
-        },
-      }
-    );
-
-    const imageUrl = Array.isArray(output) ? output[0] : output;
+    // Call Replicate API to generate pixel art
+    const output = await replicate.run('openai/whisper', {
+      input: {
+        image: profileImageUrl,
+        prompt: `Convert this image to pixel art style NFT for user ${username}`,
+      },
+    });
 
     return NextResponse.json({
       success: true,
-      imageUrl,
+      data: {
+        pixelArt: output,
+        username,
+        fid,
+        timestamp: new Date().toISOString(),
+      },
     });
-  } catch (error) {
-    console.error('Pixel generation error:', error);
+  } catch (error: any) {
+    console.error('Replicate API error:', error);
     return NextResponse.json(
-      { success: false, error: 'Generation failed' },
+      {
+        error: error.message || 'Failed to generate pixel art',
+        details: error.toString(),
+      },
       { status: 500 }
     );
   }
