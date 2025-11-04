@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 interface Props {
   imageUrl: string;
   loading: boolean;
@@ -15,9 +17,11 @@ export default function PixelArtCanvas({ imageUrl, loading }: Props) {
             <p>Generating...</p>
           </div>
         ) : imageUrl ? (
-          <img
+          <Image
             src={imageUrl}
             alt="Pixel Art"
+            width={320}
+            height={320}
             className="w-full h-full object-cover rounded-lg"
           />
         ) : (
