@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
-    const { profileImageUrl, username, fid } = await request.json() as {
+    const { profileImageUrl, _username, _fid } = await request.json() as {
       profileImageUrl: string;
       username: string;
       fid: number;
