@@ -10,38 +10,29 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { profileImageUrl, username, fid } = body;
 
-    // Validate input
     if (!profileImageUrl || !username) {
       return NextResponse.json(
-        { error: 'Missing required fields: profileImageUrl, username' },
+        { error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
-    // Call Replicate API to generate pixel art
     const output = await replicate.run('openai/whisper', {
       input: {
         image: profileImageUrl,
-        prompt: `Convert this image to pixel art style NFT for user ${username}`,
+        prompt: `Convert for user ${username}`,
       },
     });
 
     return NextResponse.json({
       success: true,
-      data: {
-        pixelArt: output,
-        username,
-        fid,
-        timestamp: new Date().toISOString(),
-      },
+      data: { pixelArt: output, username, fid },
     });
-  } catch (error: any) {
-    console.error('Replicate API error:', error);
+  } catch (error: Error | unknown) {  // ✅ FIX HERE
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('API error:', errorMessage);
     return NextResponse.json(
-      {
-        error: error.message || 'Failed to generate pixel art',
-        details: error.toString(),
-      },
+      { error: errorMessage },
       { status: 500 }
     );
   }
