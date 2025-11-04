@@ -11,14 +11,18 @@ const sdk = ThirdwebSDK.fromPrivateKey(
 
 export async function POST(request: Request) {
   try {
-    const { imageUrl, username, fid } = await request.json();
+    const { imageUrl, username, fid } = await request.json() as {
+      imageUrl: string;
+      username: string;
+      fid: number;
+    };
+
     console.log(`🌟 Minting NFT for ${username} (FID: ${fid})`);
 
     const contract = await sdk.getContract(
       process.env.NEXT_PUBLIC_NFT_CONTRACT!
     );
 
-    // ✅ FIXED: Pass 2 arguments - contract address AND metadata
     const tx = await contract.erc721.mintTo(
       process.env.NEXT_PUBLIC_NFT_CONTRACT!,
       {
