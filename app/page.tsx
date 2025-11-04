@@ -4,32 +4,36 @@ import { useState, useEffect } from 'react';
 import PixelArtCanvas from './components/PixelArtCanvas';
 import MintButton from './components/MintButton';
 
+interface User {
+  pfp_url: string;
+  username: string;
+  fid: number;
+}
+
 export default function HomePage() {
-  const [user, setUser] = useState<any>(null);
-  const [generatedImage, setGeneratedImage] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [isMinting, setIsMinting] = useState(false);
-  const [txHash, setTxHash] = useState('');
+  const [user, setUser] = useState<User | null>(null);
+  const [generatedImage, setGeneratedImage] = useState<string>('');
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [isMinting, setIsMinting] = useState<boolean>(false);
+  const [txHash, setTxHash] = useState<string>('');
 
   // Get Farcaster user data
   useEffect(() => {
     const getUserData = async () => {
       try {
-        // Fetch from Farcaster context
         const response = await fetch('/api/user');
-        const data = await response.json();
+        const data = await response.json() as User;
         setUser(data);
-      } catch (error) {
-        console.error('Error fetching user:', error);
+      } catch (error: Error | unknown) {
+        const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+        console.error('Error fetching user:', errorMsg);
       }
     };
-
     getUserData();
   }, []);
 
   const handleGenerate = async () => {
     if (!user) return;
-
     setIsGenerating(true);
     try {
       const response = await fetch('/api/generate-pixel', {
@@ -41,15 +45,15 @@ export default function HomePage() {
           fid: user.fid,
         }),
       });
-
-      const data = await response.json();
-      if (data.success) {
+      const data = (await response.json()) as { success: boolean; imageUrl?: string };
+      if (data.success && data.imageUrl) {
         setGeneratedImage(data.imageUrl);
       } else {
         alert('Error generating pixel art');
       }
-    } catch (error) {
-      console.error('Generation error:', error);
+    } catch (error: Error | unknown) {
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Generation error:', errorMsg);
       alert('Failed to generate pixel art');
     } finally {
       setIsGenerating(false);
@@ -58,7 +62,6 @@ export default function HomePage() {
 
   const handleMint = async () => {
     if (!generatedImage || !user) return;
-
     setIsMinting(true);
     try {
       const response = await fetch('/api/mint-nft', {
@@ -70,16 +73,16 @@ export default function HomePage() {
           fid: user.fid,
         }),
       });
-
-      const data = await response.json();
-      if (data.success) {
+      const data = (await response.json()) as { success: boolean; txHash?: string };
+      if (data.success && data.txHash) {
         setTxHash(data.txHash);
         alert('🎉 NFT Minted Successfully!');
       } else {
         alert('Error minting NFT');
       }
-    } catch (error) {
-      console.error('Minting error:', error);
+    } catch (error: Error | unknown) {
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Minting error:', errorMsg);
       alert('Failed to mint NFT');
     } finally {
       setIsMinting(false);
@@ -87,69 +90,50 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-8">
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-center mb-8">
-          🎨 Pixel Art NFT Mint
-        </h1>
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 to-black">
+      {/* Header */}
+      <h1 className="text-4xl font-bold text-center py-8 text-white">🎨 Pixel Art NFT Mint</h1>
 
-        {/* User Profile */}
-        {user && (
-          <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-6 mb-8 border border-purple-500/20">
-            <div className="flex items-center gap-4">
-              <img
-                src={user.pfp_url}
-                alt={user.username}
-                className="w-16 h-16 rounded-full border-2 border-purple-500"
-              />
-              <div>
-                <h2 className="text-xl font-bold text-white">{user.username}</h2>
-                <p className="text-gray-400">FID: {user.fid}</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Canvas */}
-        <PixelArtCanvas imageUrl={generatedImage} loading={isGenerating} />
-
-        {/* Buttons */}
-        <div className="flex flex-col gap-4 mt-8">
-          <button
-            onClick={handleGenerate}
-            disabled={isGenerating || !user}
-            className="w-full px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-purple-500/50"
-          >
-            {isGenerating ? '⏳ Generating...' : '🎨 Generate Pixel Art'}
-          </button>
-
-          {generatedImage && (
-            <MintButton
-              onClick={handleMint}
-              disabled={isMinting}
-              loading={isMinting}
-            />
-          )}
+      {/* User Profile */}
+      {user && (
+        <div className="text-center mb-8 text-white">
+          <p className="text-xl font-semibold">{user.username}</p>
+          <p className="text-gray-400">FID: {user.fid}</p>
         </div>
+      )}
 
-        {/* Transaction Result */}
-        {txHash && (
-          <div className="mt-6 p-4 bg-green-900/50 border border-green-500 rounded-lg">
-            <p className="text-green-200 text-sm">
-              ✅ Minted! Transaction:{' '}
-              <a
-                href={`https://basescan.org/tx/${txHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-green-100"
-              >
-                {txHash.slice(0, 10)}...{txHash.slice(-8)}
-              </a>
-            </p>
-          </div>
+      {/* Canvas */}
+      <PixelArtCanvas image={generatedImage} />
+
+      {/* Buttons */}
+      <div className="flex justify-center gap-4 my-8">
+        <button
+          onClick={handleGenerate}
+          disabled={!user || isGenerating}
+          className="px-6 py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-bold rounded-lg"
+        >
+          {isGenerating ? '⏳ Generating...' : '🎨 Generate Pixel Art'}
+        </button>
+
+        {generatedImage && (
+          <MintButton onClick={handleMint} loading={isMinting} />
         )}
       </div>
+
+      {/* Transaction Result */}
+      {txHash && (
+        <div className="text-center text-green-400 mt-8">
+          ✅ Minted! Transaction:{' '}
+          <a
+            href={`https://etherscan.io/tx/${txHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            {txHash.slice(0, 10)}...{txHash.slice(-8)}
+          </a>
+        </div>
+      )}
     </div>
   );
 }
