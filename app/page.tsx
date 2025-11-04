@@ -103,7 +103,8 @@ export default function HomePage() {
       )}
 
       {/* Canvas */}
-      <PixelArtCanvas image={generatedImage} />
+      {/* ✅ FIXED: Changed 'image' to 'imageUrl' */}
+      <PixelArtCanvas imageUrl={generatedImage} loading={isGenerating} />
 
       {/* Buttons */}
       <div className="flex justify-center gap-4 my-8">
