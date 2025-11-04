@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import PixelArtCanvas from '@/components/PixelArtCanvas';
-import MintButton from '@/components/MintButton';
+import PixelArtCanvas from './components/PixelArtCanvas';
+import MintButton from './components/MintButton';
 
 export default function HomePage() {
   const [user, setUser] = useState<any>(null);
