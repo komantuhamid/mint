@@ -1,34 +1,25 @@
-// app/page.tsx
+// app/mint/page.tsx
 'use client';
 
 import Link from 'next/link';
 
-export default function Home() {
+export default function MintPage() {
   return (
     <div className="min-h-screen w-full overflow-hidden" style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)' }}>
-      {/* Pixel Art Background Pattern */}
-      <div className="fixed inset-0 opacity-10 pointer-events-none" style={{
-        backgroundImage: 'url("data:image/svg+xml,%3Csvg width="20" height="20" xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="20" height="20" fill="none" stroke="black" stroke-width="0.5"/%3E%3C/svg%3E")'
-      }} />
-
-      {/* Game Title Area */}
-      <div className="relative h-24 flex items-center justify-center border-b-4 border-white bg-gradient-to-b from-cyan-300 to-cyan-400 shadow-lg">
+      {/* Header/Nav */}
+      <div className="relative h-16 flex items-center justify-between px-6 border-b-4 border-white bg-gradient-to-b from-cyan-300 to-cyan-400 shadow-lg">
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
           
-          .pixel-title {
+          .pixel-text {
             font-family: 'Press Start 2P', cursive;
-            font-size: 3rem;
-            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3), 
-                         -1px -1px 0px rgba(255, 255, 255, 0.5);
-            color: #005599;
-            letter-spacing: 4px;
+            letter-spacing: 2px;
           }
 
           .pixel-button {
             font-family: 'Press Start 2P', cursive;
-            font-size: 0.75rem;
-            padding: 12px 24px;
+            font-size: 0.6rem;
+            padding: 10px 20px;
             border: 4px solid #005599;
             background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
             color: #005599;
@@ -49,6 +40,11 @@ export default function Home() {
             box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.3);
           }
 
+          .pixel-button-green {
+            background: linear-gradient(135deg, #00FF00 0%, #00CC00 100%);
+            color: #003300;
+          }
+
           .pixel-box {
             border: 4px solid #005599;
             background: white;
@@ -63,107 +59,175 @@ export default function Home() {
             border: 2px solid rgba(0, 0, 0, 0.1);
             pointer-events: none;
           }
+
+          .pixel-title {
+            font-family: 'Press Start 2P', cursive;
+            color: #005599;
+          }
+
+          .nft-image-container {
+            background: linear-gradient(135deg, #FF6600 0%, #FF3333 100%);
+            border: 4px solid #005599;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+            min-height: 300px;
+            box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.2);
+          }
         `}</style>
-        <div className="pixel-title">🔨 BUILDER</div>
+
+        <div className="pixel-text" style={{ fontSize: '1rem', color: '#005599' }}>🔨 BUILDER</div>
+        <Link href="/">
+          <button className="pixel-button">← BACK</button>
+        </Link>
       </div>
 
       {/* Main Content */}
-      <div className="relative flex items-center justify-center min-h-screen pt-12 px-6">
-        <div className="w-full max-w-2xl">
-          {/* Hero Section */}
-          <div className="pixel-box p-8 mb-8 bg-gradient-to-b from-white to-gray-100">
-            <div className="text-center mb-6">
-              <h1 style={{ fontFamily: "'Press Start 2P', cursive", fontSize: '1.5rem', color: '#005599', marginBottom: '1rem' }}>
-                MINT ONBOARDING NFT
-              </h1>
-              <p style={{ fontFamily: "'Press Start 2P', cursive", fontSize: '0.6rem', color: '#333', letterSpacing: '1px', lineHeight: '1.8' }}>
-                Build your legacy on Base.<br />
-                Rebuild the Dog Empire.<br />
-                One NFT at a time.
-              </p>
+      <div className="p-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+          {/* NFT Image Section */}
+          <div className="pixel-box p-6">
+            {/* Title */}
+            <div className="pixel-title text-center mb-4" style={{ fontSize: '1.2rem' }}>
+              CEO
+            </div>
+            
+            {/* NFT Image Display */}
+            <div className="nft-image-container mb-6 relative">
+              🐕
+              <div className="absolute top-4 right-4" style={{ fontSize: '40px' }}>⭐</div>
             </div>
 
-            {/* Feature Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
-              {/* Card 1 */}
-              <div className="pixel-box p-4 hover:shadow-2xl transition-shadow">
-                <div style={{ fontFamily: "'Press Start 2P', cursive", fontSize: '0.5rem', color: '#005599', marginBottom: '0.5rem' }}>
-                  ⚙️ CUSTOMIZE
-                </div>
-                <p style={{ fontSize: '0.7rem', color: '#666', lineHeight: '1.6' }}>
-                  Design your unique pixel art NFT with custom traits.
-                </p>
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-2">
+              <div className="pixel-box p-3 text-center">
+                <div className="pixel-title" style={{ fontSize: '0.5rem', marginBottom: '0.5rem' }}>RARITY</div>
+                <div style={{ fontSize: '0.7rem', color: '#FF6600', fontWeight: 'bold' }}>RARE</div>
               </div>
-
-              {/* Card 2 */}
-              <div className="pixel-box p-4 hover:shadow-2xl transition-shadow">
-                <div style={{ fontFamily: "'Press Start 2P', cursive", fontSize: '0.5rem', color: '#005599', marginBottom: '0.5rem' }}>
-                  🏆 COLLECT
-                </div>
-                <p style={{ fontSize: '0.7rem', color: '#666', lineHeight: '1.6' }}>
-                  Own exclusive Builder NFTs on Base blockchain.
-                </p>
+              <div className="pixel-box p-3 text-center">
+                <div className="pixel-title" style={{ fontSize: '0.5rem', marginBottom: '0.5rem' }}>EDITION</div>
+                <div style={{ fontSize: '0.7rem', color: '#005599' }}>1/100</div>
               </div>
-
-              {/* Card 3 */}
-              <div className="pixel-box p-4 hover:shadow-2xl transition-shadow">
-                <div style={{ fontFamily: "'Press Start 2P', cursive", fontSize: '0.5rem', color: '#005599', marginBottom: '0.5rem' }}>
-                  🌟 TRADE
-                </div>
-                <p style={{ fontSize: '0.7rem', color: '#666', lineHeight: '1.6' }}>
-                  Trade and sell NFTs in the marketplace.
-                </p>
+              <div className="pixel-box p-3 text-center">
+                <div className="pixel-title" style={{ fontSize: '0.5rem', marginBottom: '0.5rem' }}>TRAITS</div>
+                <div style={{ fontSize: '0.7rem', color: '#005599' }}>8</div>
               </div>
-
-              {/* Card 4 */}
-              <div className="pixel-box p-4 hover:shadow-2xl transition-shadow">
-                <div style={{ fontFamily: "'Press Start 2P', cursive", fontSize: '0.5rem', color: '#005599', marginBottom: '0.5rem' }}>
-                  💎 RARE
-                </div>
-                <p style={{ fontSize: '0.7rem', color: '#666', lineHeight: '1.6' }}>
-                  Limited edition NFTs with legendary rarity traits.
-                </p>
-              </div>
-            </div>
-
-            {/* Price Section */}
-            <div className="pixel-box p-4 bg-gradient-to-r from-yellow-100 to-orange-100 my-6 text-center">
-              <p style={{ fontFamily: "'Press Start 2P', cursive", fontSize: '0.5rem', color: '#005599', marginBottom: '0.5rem' }}>
-                MINT PRICE
-              </p>
-              <p style={{ fontFamily: "'Press Start 2P', cursive", fontSize: '1.5rem', color: '#FF6600' }}>
-                1.0 USDC
-              </p>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-              <Link href="/mint">
-                <button className="pixel-button">
-                  🎮 MINT NOW
-                </button>
-              </Link>
-              
-              <Link href="/inventory">
-                <button className="pixel-button" style={{ background: 'linear-gradient(135deg, #00FF00 0%, #00CC00 100%)', color: '#003300' }}>
-                  📦 INVENTORY
-                </button>
-              </Link>
             </div>
           </div>
 
-          {/* Footer Info */}
-          <div className="text-center px-4">
-            <p style={{ fontFamily: "'Press Start 2P', cursive", fontSize: '0.4rem', color: 'white', letterSpacing: '1px', textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>
-              POWERED BY THIRDWEB × BASE
+          {/* Details Section */}
+          <div className="flex flex-col gap-4">
+            {/* Title */}
+            <div>
+              <h1 className="pixel-title" style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>
+                MINT ONBOARDING NFT
+              </h1>
+              <p style={{ fontFamily: "'Press Start 2P', cursive", fontSize: '0.5rem', color: '#333' }}>
+                CEO Dog - Legendary Builder Edition
+              </p>
+            </div>
+
+            {/* Description Box */}
+            <div className="pixel-box p-4">
+              <div className="pixel-title" style={{ fontSize: '0.6rem', marginBottom: '1rem', color: '#005599' }}>
+                DESCRIPTION
+              </div>
+              <p style={{ fontSize: '0.7rem', lineHeight: '1.6', color: '#666' }}>
+                Join the Dog Empire as a CEO. This legendary NFT grants access to exclusive traits, features, and rewards on Base blockchain.
+              </p>
+            </div>
+
+            {/* Price Box */}
+            <div className="pixel-box p-4 bg-gradient-to-r from-yellow-100 to-orange-100 text-center">
+              <div className="pixel-title" style={{ fontSize: '0.5rem', color: '#005599', marginBottom: '0.5rem' }}>
+                MINT PRICE
+              </div>
+              <div className="pixel-title" style={{ fontSize: '1.8rem', color: '#FF6600' }}>
+                10 USDC
+              </div>
+            </div>
+
+            {/* Traits */}
+            <div className="pixel-box p-4">
+              <div className="pixel-title" style={{ fontSize: '0.6rem', marginBottom: '1rem', color: '#005599' }}>
+                TRAITS
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div style={{ fontSize: '0.5rem', background: '#f0f0f0', padding: '0.5rem', border: '2px solid #005599' }}>
+                  👁️ VR Visor
+                </div>
+                <div style={{ fontSize: '0.5rem', background: '#f0f0f0', padding: '0.5rem', border: '2px solid #005599' }}>
+                  🎧 Headphones
+                </div>
+                <div style={{ fontSize: '0.5rem', background: '#f0f0f0', padding: '0.5rem', border: '2px solid #005599' }}>
+                  🔥 Fire Aura
+                </div>
+                <div style={{ fontSize: '0.5rem', background: '#f0f0f0', padding: '0.5rem', border: '2px solid #005599' }}>
+                  ⚡ Lightning
+                </div>
+                <div style={{ fontSize: '0.5rem', background: '#f0f0f0', padding: '0.5rem', border: '2px solid #005599' }}>
+                  💎 Gold Chain
+                </div>
+                <div style={{ fontSize: '0.5rem', background: '#f0f0f0', padding: '0.5rem', border: '2px solid #005599' }}>
+                  🌟 Legend
+                </div>
+                <div style={{ fontSize: '0.5rem', background: '#f0f0f0', padding: '0.5rem', border: '2px solid #005599' }}>
+                  🚀 Spaceship
+                </div>
+                <div style={{ fontSize: '0.5rem', background: '#f0f0f0', padding: '0.5rem', border: '2px solid #005599' }}>
+                  🎨 Custom
+                </div>
+              </div>
+            </div>
+
+            {/* Mint Button */}
+            <button className="pixel-button pixel-button-green" style={{ width: '100%', padding: '20px', fontSize: '0.8rem' }}>
+              🎮 MINT NOW
+            </button>
+
+            {/* Secondary Actions */}
+            <div className="grid grid-cols-2 gap-3">
+              <button className="pixel-button" style={{ width: '100%' }}>📦 ADD TO CART</button>
+              <button className="pixel-button" style={{ width: '100%' }}>❤️ FAVORITE</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Additional Info Section */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12">
+          <div className="pixel-box p-4">
+            <div className="pixel-title" style={{ fontSize: '0.6rem', marginBottom: '1rem', color: '#005599' }}>
+              ✅ VERIFIED
+            </div>
+            <p style={{ fontSize: '0.7rem', color: '#666' }}>
+              Official Builder NFT on Base blockchain
+            </p>
+          </div>
+          <div className="pixel-box p-4">
+            <div className="pixel-title" style={{ fontSize: '0.6rem', marginBottom: '1rem', color: '#005599' }}>
+              🔒 SECURE
+            </div>
+            <p style={{ fontSize: '0.7rem', color: '#666' }}>
+              Smart contract audited & verified
+            </p>
+          </div>
+          <div className="pixel-box p-4">
+            <div className="pixel-title" style={{ fontSize: '0.6rem', marginBottom: '1rem', color: '#005599' }}>
+              💰 ROYALTIES
+            </div>
+            <p style={{ fontSize: '0.7rem', color: '#666' }}>
+              10% secondary sales revenue
             </p>
           </div>
         </div>
       </div>
 
-      {/* Floating Emoji */}
-      <div className="fixed bottom-10 right-10 text-6xl opacity-30 pointer-events-none animate-bounce">
-        🔨
+      {/* Footer */}
+      <div className="text-center py-8 px-4 mt-12">
+        <p style={{ fontFamily: "'Press Start 2P', cursive", fontSize: '0.4rem', color: 'white', letterSpacing: '1px', textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>
+          POWERED BY THIRDWEB × BASE
+        </p>
       </div>
     </div>
   );
