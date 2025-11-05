@@ -1,13 +1,9 @@
 // app/page.tsx
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 
 export default function Home() {
-  const [isHovering, setIsHovering] = useState(false);
-
   return (
     <div className="min-h-screen w-full overflow-hidden" style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)' }}>
       {/* Pixel Art Background Pattern */}
@@ -25,14 +21,8 @@ export default function Home() {
             font-size: 3rem;
             text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3), 
                          -1px -1px 0px rgba(255, 255, 255, 0.5);
-            animation: pixelBounce 2s infinite;
             color: #005599;
             letter-spacing: 4px;
-          }
-
-          @keyframes pixelBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
           }
 
           .pixel-button {
@@ -79,12 +69,7 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="relative flex items-center justify-center min-h-screen pt-12 px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="w-full max-w-2xl"
-        >
+        <div className="w-full max-w-2xl">
           {/* Hero Section */}
           <div className="pixel-box p-8 mb-8 bg-gradient-to-b from-white to-gray-100">
             <div className="text-center mb-6">
@@ -106,7 +91,7 @@ export default function Home() {
                   ⚙️ CUSTOMIZE
                 </div>
                 <p style={{ fontSize: '0.7rem', color: '#666', lineHeight: '1.6' }}>
-                  Design your unique pixel art NFT with custom traits and colors.
+                  Design your unique pixel art NFT with custom traits.
                 </p>
               </div>
 
@@ -116,7 +101,7 @@ export default function Home() {
                   🏆 COLLECT
                 </div>
                 <p style={{ fontSize: '0.7rem', color: '#666', lineHeight: '1.6' }}>
-                  Own exclusive Builder NFTs on the Base blockchain.
+                  Own exclusive Builder NFTs on Base blockchain.
                 </p>
               </div>
 
@@ -126,7 +111,7 @@ export default function Home() {
                   🌟 TRADE
                 </div>
                 <p style={{ fontSize: '0.7rem', color: '#666', lineHeight: '1.6' }}>
-                  Trade and sell your NFTs in the marketplace.
+                  Trade and sell NFTs in the marketplace.
                 </p>
               </div>
 
@@ -154,11 +139,7 @@ export default function Home() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
               <Link href="/mint">
-                <button
-                  className="pixel-button"
-                  onMouseEnter={() => setIsHovering(true)}
-                  onMouseLeave={() => setIsHovering(false)}
-                >
+                <button className="pixel-button">
                   🎮 MINT NOW
                 </button>
               </Link>
@@ -177,17 +158,13 @@ export default function Home() {
               POWERED BY THIRDWEB × BASE
             </p>
           </div>
-        </motion.div>
+        </div>
       </div>
 
-      {/* Floating Elements */}
-      <motion.div
-        animate={{ y: [0, -20, 0] }}
-        transition={{ duration: 4, repeat: Infinity }}
-        className="fixed bottom-10 right-10 text-6xl opacity-30 pointer-events-none"
-      >
+      {/* Floating Emoji */}
+      <div className="fixed bottom-10 right-10 text-6xl opacity-30 pointer-events-none animate-bounce">
         🔨
-      </motion.div>
+      </div>
     </div>
   );
 }
