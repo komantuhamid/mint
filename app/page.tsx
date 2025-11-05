@@ -2,7 +2,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export default function MintPage() {
@@ -109,7 +108,6 @@ export default function MintPage() {
               onMouseEnter={() => setShowImage(true)}
               onMouseLeave={() => setShowImage(false)}
               onClick={() => {
-                // Handle mint logic here
                 alert('Mint functionality coming soon!');
               }}
             >
